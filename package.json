@@ -8,8 +8,8 @@
     "build": "cross-env NODE_ENV=production webpack -c script/webpack.prod.js",
     "build:analy": "cross-env NODE_ENV=production webpack -c script/webpack.analy.js",
     "build:open": " npm run build && serve -s dist",
-    "eslint": "eslint src --fix",
-    "prepare": "husky install"
+    "lint": "eslint --fix",
+    "prepare": "husky"
   },
   "author": "fengjin",
   "license": "ISC",

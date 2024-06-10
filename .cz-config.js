@@ -1,18 +1,18 @@
 'use strict'
 module.exports = {
   types: [
-    { value: 'feat', name: '✨新增:    新的内容' },
-    { value: 'fix', name: '🐛修复:    修复一个Bug' },
-    { value: 'docs', name: '📝文档:    变更的只有文档' },
-    { value: 'style', name: '💄格式:    空格, 分号等格式修复' },
-    { value: 'refactor', name: '️♻️重构:    代码重构，注意和特性、修复区分开' },
-    { value: 'perf', name: '️️⚡️性能:    提升性能' },
-    { value: 'test', name: '✅测试:    添加一个测试' },
-    { value: 'build', name: '🔧工具:    开发工具变动(构建、脚手架工具等)' },
-    { value: 'rollback', name: '⏪回滚:    代码回退' },
-    { value: 'addLog', name: '👨🏻‍💻添加log:    代码回退' }
+    { value: 'feat', name: '✨ feat: 新增内容' },
+    { value: 'fix', name: '🐛 fix: 修复一个Bug' },
+    { value: 'docs', name: '📝 docs: 变更的只有文档' },
+    { value: 'style', name: '💄 style: 空格, 分号等格式修复' },
+    { value: 'refactor', name: '️♻️ refactor: 代码重构，注意和特性、修复区分开' },
+    { value: 'perf', name: '️️⚡️ perf: 提升性能' },
+    { value: 'test', name: '✅ test: 添加一个测试' },
+    { value: 'build', name: '🔧 build: 开发工具变动(构建、脚手架工具等)' },
+    { value: 'rollback', name: '⏪ rollback: 代码回退' },
+    { value: 'addLog', name: '👨🏻‍💻 addLog: 添加log' }
   ],
-  scopes: [{ name: 'leetcode' }, { name: 'javascript' }, { name: 'typescript' }, { name: 'Vue' }, { name: 'node' }],
+  scopes: [{ name: 'css' }, { name: 'js,ts' }, { name: 'jsx,tsx' }, { name: 'node' }],
   // it needs to match the value for field type. Eg.: 'fix'
   /*  scopeOverrides: {
 	fix: [

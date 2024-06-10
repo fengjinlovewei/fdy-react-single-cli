@@ -29,7 +29,7 @@ function App() {
     <>
       <div className='box'>
         <div className='theme-title'>我是主题颜色</div>
-        <button onClick={setDark}>setDark</button>
+        <button onClick={setDark}>setDarkddd</button>
         <button onClick={onClick}>lazyShow</button>
         {lazyShow && <LazyDemo></LazyDemo>}
         <h2>222webpack22225222-react-tswwssddd {isDev()}</h2>

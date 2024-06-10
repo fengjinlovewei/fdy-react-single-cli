@@ -5,6 +5,8 @@ import TestClass from '@/components/TestClass';
 import { LazyDemo } from '@/lazyComponents/index';
 import Footer from '@/components/Footer'
 
+import { initTheme } from '@/styles/theme';
+
 import { isDev, DateFormat } from '@/utils/index';
 
 console.log('process.env.NODE_ENV', process.env.NODE_ENV);
@@ -19,9 +21,15 @@ function App() {
     setLazyShow(true);
   };
 
+  const setDark = () => {
+    initTheme('dark')
+  }
+
   return (
     <>
     <div className='box'>
+      <div className='theme-title'>我是主题颜色</div>
+    <button onClick={setDark}>setDark</button>
     <button onClick={onClick}>lazyShow</button>
       {lazyShow && <LazyDemo></LazyDemo>}
       <h2>222webpack22225222-react-tswwssddd {isDev()}</h2>

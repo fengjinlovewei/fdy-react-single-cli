@@ -31,8 +31,8 @@ module.exports = {
     subject: '短说明:\n',
     body: '长说明，使用"|"换行(可选)：\n',
     breaking: '非兼容性说明 (可选):\n',
-    footer: '关联关闭的issue，例如：#31, #34(可选):\n'
-    // confirmCommit: '确定提交说明?(yes/no)'
+    footer: '关联关闭的issue，例如：#31, #34(可选):\n',
+    confirmCommit: '确定提交说明?(yes/no)'
   },
   allowCustomScopes: true,
   allowBreakingChanges: ['特性', '修复'],

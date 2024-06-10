@@ -1,6 +1,6 @@
-echo $0 // 打印当前执行的husky hook名称
-echo $1 // 打印当前执行的git hook名称
-echo `cat $1` // 打印当前执行的git hook参数值
+# echo $0 // 打印当前执行的husky hook名称
+# echo $1 // 打印当前执行的git hook名称
+# echo `cat $1` // 打印当前执行的git hook参数值
 commit_msg=`cat $1`
 msg_re="^(feat|fix|docs|style|refactor|perf|test|workflow|build|ci|chore|release|workflow)(\(.+\))?: .{1,100}"
 if [[ $commit_msg =~ $msg_re ]]; then

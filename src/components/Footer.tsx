@@ -1,20 +1,19 @@
-import { useState } from 'react';
-import LazyLoad from 'react-lazyload';
+import LazyLoad from 'react-lazyload'
 
-import * as styles from './Footer.module.less';
+import * as styles from './Footer.module.less'
 
-console.log('styles', styles);
+console.log('styles', styles)
 
-import f1 from '@/assets/images/f1.prefetch.png';
-import f2 from '@/assets/images/f2.prefetch.png';
-import f3 from '@/assets/images/f3.preload.png';
-import f4 from '@/assets/images/f4.preload.png';
+import f1 from '@/assets/images/f1.prefetch.png'
+import f2 from '@/assets/images/f2.prefetch.png'
+import f3 from '@/assets/images/f3.preload.png'
+import f4 from '@/assets/images/f4.preload.png'
 
 const Footer = () => {
   return (
     <>
       <div className={styles.footer}>
-        <div >footer</div>
+        <div>footer</div>
         <LazyLoad height={200} offset={100} once>
           <img src={f1} alt='' />
         </LazyLoad>
@@ -41,7 +40,7 @@ const Footer = () => {
         </LazyLoad>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

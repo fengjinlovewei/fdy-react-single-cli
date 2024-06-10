@@ -1,21 +1,21 @@
-import React, { PureComponent } from 'react';
-import { Button, Space } from 'antd-mobile';
+import { PureComponent } from 'react'
+import { Button, Space } from 'antd-mobile'
 
-import person from '@/assets/images/person.jpeg';
-import xiaoxiao from '@/assets/images/xiaoxiao.jpeg';
-import w1 from '@/assets/images/w1.webp';
+import person from '@/assets/images/person.jpeg'
+import xiaoxiao from '@/assets/images/xiaoxiao.jpeg'
+import w1 from '@/assets/images/w1.webp'
 
-import { isDev, DateFormat } from '@/utils/index';
+import { isDev, DateFormat } from '@/utils/index'
 
 // 装饰器为,组件添加age属性
-function addAge(Target: Function) {
-  Target.prototype.age = 111;
+function addAge(Target: any) {
+  Target.prototype.age = 111
 }
 
 // 使用装饰圈
 @addAge
 class TestClass extends PureComponent {
-  age?: number;
+  age?: number
 
   render() {
     return (
@@ -40,8 +40,8 @@ class TestClass extends PureComponent {
         <img src={xiaoxiao} alt='' />
         <img src={w1} alt='' />
       </>
-    );
+    )
   }
 }
 
-export default TestClass;
+export default TestClass

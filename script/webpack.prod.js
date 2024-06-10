@@ -41,6 +41,12 @@ module.exports = merge(baseConfig, {
           test: /node_modules/, // 只匹配node_modules里面的模块
           name: 'vendors', // 提取文件命名为vendors,js后缀和chunkhash会自动加
           minChunks: 1, // 只要使用一次就提取出来
+          /**
+           * async: 只有异步加载的某块才会被分包
+           * initial: 同步和异步导入的模块都会被选中分离出来。
+           * all: 如果1.js被 a入口动态导入，被b入口静态导入，initial会打包2个包，一个存在于b中，另一个是单独的包，支持异步加载。
+           * 使用all的话就还是打成一个包，就是一个单独的包
+           */
           chunks: 'initial', // 只提取初始化就能获取到的模块,不管异步的
           minSize: 0, // 提取代码体积大于0就提取出来
           priority: 1, // 提取优先级为1

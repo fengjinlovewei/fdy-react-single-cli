@@ -3,9 +3,39 @@ const path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
 
 const isDev = process.env.NODE_ENV === 'development'; // 是否是开发模式
 const appSrc = path.resolve(__dirname, '../src');
+
+// style files regexes
+const cssRegex = /\.css$/;
+const cssModuleRegex = /\.module\.css$/;
+const lessRegex = /\.less$/;
+const lessModuleRegex = /\.module\.less$/;
+
+const getStyleLoaders = (cssOptions, preProcessor) => {
+  const loaders = [
+    isDev ? 'style-loader' : MiniCssExtractPlugin.loader, // 开发环境使用style-looader,打包模式抽离css
+    {
+      loader: 'css-loader',
+      options: cssOptions,
+    },
+    'postcss-loader',
+  ];
+  if (preProcessor) {
+    loaders.push(
+      preProcessor, // 在这里引入要增加的全局less文件
+      {
+        loader: 'style-resources-loader',
+        options: {
+          patterns: path.resolve(__dirname, '../src/styles/common.less'),
+        },
+      }
+    );
+  }
+  return loaders;
+};
 
 module.exports = {
   entry: path.join(__dirname, '../src/index.tsx'), // 入口文件
@@ -50,38 +80,84 @@ module.exports = {
          */
         use: ['thread-loader', 'babel-loader'],
       },
-      /**
-       * 开始我以为添加了 path.resolve(__dirname, '../node_modules/antd-mobile')
-       * 就可以解决css这个loader解析不到antd-mobile里css的问题，结果是没有解决，
-       * 因为报错的css文件链接为
-       * ./node_modules/.pnpm/antd-mobile@5.36.1_react-dom@18.3.1_react@18.3.1/node_modules/antd-mobile/es/global/global.css
-       * 这个链接是 .pnpm 文件夹下的引用，所以配置路径为 ../node_modules/antd-mobile 肯定是不对的
-       * 原因就是使用pnpm安装依赖引发的问题，具体细节要以后研究，暂时先注释吧
-       */
       {
-        // include: [
-        //   appSrc,
-        //   path.resolve(__dirname, '../node_modules/antd-mobile'),
-        // ],
-        test: /\.css$/, //匹配 css 文件
-        // 注意 postcss-loader 放的位置， postcss-loader 的配置放在了postcss.config.js 中
-        use: [
-          isDev ? 'style-loader' : MiniCssExtractPlugin.loader, // 开发环境使用style-looader,打包模式抽离css
-          'css-loader',
-          'postcss-loader',
+        // 匹配到一个就不继续培培乐，顺序是从下到上
+        oneOf: [
+          {
+            /**
+             * 开始我以为添加了 path.resolve(__dirname, '../node_modules/antd-mobile')
+             * 就可以解决css这个loader解析不到antd-mobile里css的问题，结果是没有解决，
+             * 因为报错的css文件链接为
+             * ./node_modules/.pnpm/antd-mobile@5.36.1_react-dom@18.3.1_react@18.3.1/node_modules/antd-mobile/es/global/global.css
+             * 这个链接是 .pnpm 文件夹下的引用，所以配置路径为 ../node_modules/antd-mobile 肯定是不对的
+             * 原因就是使用pnpm安装依赖引发的问题，具体细节要以后研究，暂时先注释吧
+             */
+            // include: [
+            //   appSrc,
+            //   path.resolve(__dirname, '../node_modules/antd-mobile'),
+            // ],
+            test: cssRegex, //匹配 css 文件
+            exclude: cssModuleRegex,
+            // 注意 postcss-loader 放的位置， postcss-loader 的配置放在了postcss.config.js 中
+            use: getStyleLoaders({
+              // importLoaders 的作用是：
+              // 1.css 文件有内容： .title{ transform: scale(0.5) }
+              // 2.css 文件有内容： @import './1.css'; .title { color: red }
+              /**
+               *首先2.css @import语句导入了1.css
+               *2.css可以被匹配，当它被匹配到之后就是postcss-loader进行工作
+               *基于当前的代码，postcss-loader 拿到了2.css当中的代码之后分析基于我们的筛选条件并不需做额外的处理
+                最终就将代码直接教给了css-loader
+               *此时 css-loader是可以处理@import './1.css'，这个时候它又拿到了1.css文件，但是loader 不会回头找postcss-loader处理兼容。
+               *最终将处理好的css代码交给style-loader进行展示
+               *造成的问题就是1.css的样式没有添加浏览器的兼容前缀，因为他没有经过postcss-loader!
+               *所以importLoaders得作用就是遇到1.css时，可以向后找1个loader进行编译，也就是postcss-loader
+               */
+              importLoaders: 1,
+              modules: {
+                mode: 'icss',
+              },
+              // 表示当前文件是否含有副作用
+              // 副作用（effect 或者 side effect）指在导入时会执行特殊行为的代码，而不是仅仅暴露一个或多个导出内容。
+              // polyfill 就是一个例子，尽管其通常不提供导出，但是会影响全局作用域，因此 polyfill 将被视为一个副作用。
+              // 所以，如果所有代码都不包含副作用，我们就可以简单地将该属性标记为 false 以告知 webpack 可以安全地删除未使用的导出内容。
+              // http://webpack.docschina.org/guides/tree-shaking/#mark-the-file-as-side-effect-free
+              // sideEffects: true,
+            }),
+          },
+          {
+            include: [appSrc],
+            test: lessRegex, //匹配sless 文件
+            exclude: lessModuleRegex,
+            // 注意 postcss-loader 放的位置， postcss-loader 的配置放在了postcss.config.js 中
+            use: getStyleLoaders(
+              {
+                importLoaders: 2,
+                modules: {
+                  mode: 'icss',
+                },
+                // sideEffects: true,
+              },
+              'less-loader'
+            ),
+          },
+          {
+            include: [appSrc],
+            test: lessModuleRegex, //匹配.module.less 文件
+            use: getStyleLoaders(
+              {
+                importLoaders: 2,
+                modules: {
+                  mode: 'local',
+                  getLocalIdent: getCSSModuleLocalIdent,
+                },
+              },
+              'less-loader'
+            ),
+          },
         ],
       },
-      {
-        include: [appSrc],
-        test: /\.less$/, //匹配sless 文件
-        // 注意 postcss-loader 放的位置， postcss-loader 的配置放在了postcss.config.js 中
-        use: [
-          isDev ? 'style-loader' : MiniCssExtractPlugin.loader, // 开发环境使用style-looader,打包模式抽离css
-          'css-loader',
-          'postcss-loader',
-          'less-loader',
-        ],
-      },
+
       // 对于图片文件,webpack4使用file-loader和url-loader来处理的,
       // 但webpack5不使用这两个loader了,而是采用自带的asset-module来处理
       // 这个也能处理css的背景url，但是无法处理行间属性的链接，比如

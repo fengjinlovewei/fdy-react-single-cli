@@ -1,5 +1,4 @@
 module.exports = {
-  trailingComma: 'es6',
   tabWidth: 2, //缩进
   semi: false, //句末加分号
   singleQuote: true, //用单引号

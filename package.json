@@ -9,6 +9,7 @@
     "build:analy": "cross-env NODE_ENV=production webpack -c script/webpack.analy.js",
     "build:open": " npm run build && serve -s dist",
     "lint": "eslint src --fix",
+    "commit": "git-cz",
     "prepare": "husky"
   },
   "author": "fengjin",

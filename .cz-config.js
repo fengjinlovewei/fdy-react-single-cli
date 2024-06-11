@@ -36,7 +36,7 @@ module.exports = {
   },
   allowCustomScopes: false,
   allowBreakingChanges: ['特性', '修复'],
-  skipQuestions: ['scope', 'body', 'footer'],
+  skipQuestions: ['scope', 'body'],
   // limit subject length d
   subjectLimit: 100
 }

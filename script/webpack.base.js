@@ -1,9 +1,15 @@
-// webpack.base.js
 const path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
+
+// 必须自己定义添加 module- 前缀，然后在 standard: [/^adm-/, /^module-/] 配置这个前缀
+// 因为这个css名称是动态生成的，所以 PurgeCSSPlugin 的treeshrking 会把这部分删除掉，
+// 所以必须添加自定义前缀过滤一下
+const myGetCSSModuleLocalIdent = (...arg) => {
+  return 'module-' + getCSSModuleLocalIdent(...arg);
+};
 
 const isDev = process.env.NODE_ENV === 'development'; // 是否是开发模式
 const appSrc = path.resolve(__dirname, '../src');
@@ -29,9 +35,9 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
       {
         loader: 'style-resources-loader',
         options: {
-          patterns: path.resolve(__dirname, '../src/styles/common.less'),
+          patterns: [path.resolve(__dirname, '../src/styles/common.less')],
         },
-      }
+      },
     );
   }
   return loaders;
@@ -100,7 +106,7 @@ module.exports = {
             exclude: cssModuleRegex,
             // 注意 postcss-loader 放的位置， postcss-loader 的配置放在了postcss.config.js 中
             use: getStyleLoaders({
-              // importLoaders 的作用是：
+              // importLoaders 的作用是(以下针对的都是生产环境，dev环境没有问题)：
               // 1.css 文件有内容： .title{ transform: scale(0.5) }
               // 2.css 文件有内容： @import './1.css'; .title { color: red }
               /**
@@ -112,6 +118,7 @@ module.exports = {
                *最终将处理好的css代码交给style-loader进行展示
                *造成的问题就是1.css的样式没有添加浏览器的兼容前缀，因为他没有经过postcss-loader!
                *所以importLoaders得作用就是遇到1.css时，可以向后找1个loader进行编译，也就是postcss-loader
+
                */
               importLoaders: 1,
               modules: {
@@ -123,6 +130,16 @@ module.exports = {
               // 所以，如果所有代码都不包含副作用，我们就可以简单地将该属性标记为 false 以告知 webpack 可以安全地删除未使用的导出内容。
               // http://webpack.docschina.org/guides/tree-shaking/#mark-the-file-as-side-effect-free
               // sideEffects: true,
+            }),
+          },
+          {
+            test: cssModuleRegex,
+            use: getStyleLoaders({
+              importLoaders: 1,
+              modules: {
+                mode: 'local',
+                getLocalIdent: myGetCSSModuleLocalIdent,
+              },
             }),
           },
           {
@@ -138,7 +155,7 @@ module.exports = {
                 },
                 // sideEffects: true,
               },
-              'less-loader'
+              'less-loader',
             ),
           },
           {
@@ -149,10 +166,10 @@ module.exports = {
                 importLoaders: 2,
                 modules: {
                   mode: 'local',
-                  getLocalIdent: getCSSModuleLocalIdent,
+                  getLocalIdent: myGetCSSModuleLocalIdent,
                 },
               },
-              'less-loader'
+              'less-loader',
             ),
           },
         ],
@@ -226,13 +243,11 @@ module.exports = {
       inject: true, // 自动注入静态资源
       // https://github.com/jantimon/html-webpack-plugin/blob/main/examples/template-parameters/webpack.config.js
       templateParameters: (compilation, assets, assetTags, options) => {
-        const list = Object.keys(compilation.assets).map(item =>
-          path.join(assets.publicPath, item)
-        );
+        const list = Object.keys(compilation.assets).map((item) => path.join(assets.publicPath, item));
 
         const preloadLinks = list
-          .filter(item => item.indexOf('.preload.') > -1)
-          .map(item => {
+          .filter((item) => item.indexOf('.preload.') > -1)
+          .map((item) => {
             return {
               rel: 'preload',
               as: 'image',
@@ -241,8 +256,8 @@ module.exports = {
           });
 
         const prefetchLinks = list
-          .filter(item => item.indexOf('.prefetch.') > -1)
-          .map(item => {
+          .filter((item) => item.indexOf('.prefetch.') > -1)
+          .map((item) => {
             return {
               rel: 'prefetch',
               as: 'image',

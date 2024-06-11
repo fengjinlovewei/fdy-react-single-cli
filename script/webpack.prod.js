@@ -70,7 +70,7 @@ module.exports = merge(baseConfig, {
         {
           from: path.resolve(__dirname, '../public'), // 复制public下文件
           to: path.resolve(__dirname, '../dist'), // 复制到dist目录中
-          filter: source => {
+          filter: (source) => {
             return !source.includes('index.html'); // 忽略index.html
           },
         },
@@ -87,12 +87,9 @@ module.exports = merge(baseConfig, {
     new PurgeCSSPlugin({
       // 检测src下所有tsx文件和public下index.html中使用的类名和id和标签名称
       // 只打包这些文件中用到的样式
-      paths: globAll.sync([
-        path.join(__dirname, '../src/**/*.tsx'),
-        path.join(__dirname, '../public/index.html'),
-      ]),
+      paths: globAll.sync([path.join(__dirname, '../src/**/*.tsx'), path.join(__dirname, '../public/index.html')]),
       safelist: {
-        standard: [/^adm-/], // 过滤以adm-开头的类名，这是antd的前缀，哪怕没用到也不删除
+        standard: [/^adm-/, /^module-/], // 过滤以adm-开头的类名，这是antd的前缀，哪怕没用到也不删除
       },
     }),
     new CompressionPlugin({

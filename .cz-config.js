@@ -37,6 +37,6 @@ module.exports = {
   allowCustomScopes: false,
   allowBreakingChanges: ['特性', '修复'],
   skipQuestions: ['body'],
-  // limit subject length
+  // limit subject length d
   subjectLimit: 100
 }

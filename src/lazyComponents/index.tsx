@@ -13,7 +13,7 @@ const Demo = lazy(
       /* webpackChunkName: "lazyDemo" */
       /* webpackPrefetch: true */
       './Demo'
-    )
+    ),
 ); // 使用import语法配合react的Lazy动态引入资源
 
 export function LazyDemo() {

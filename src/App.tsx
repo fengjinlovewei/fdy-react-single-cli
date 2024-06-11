@@ -1,29 +1,29 @@
-import { useState } from 'react'
-import './App.less'
+import { useState } from 'react';
+import './App.less';
 
-import TestClass from '@/components/TestClass'
-import { LazyDemo } from '@/lazyComponents/index'
-import Footer from '@/components/Footer'
+import TestClass from '@/components/TestClass';
+import { LazyDemo } from '@/lazyComponents/index';
+import Footer from '@/components/Footer';
 
-import { initTheme } from '@/styles/theme'
+import { initTheme } from '@/styles/theme';
 
-import { isDev, DateFormat } from '@/utils/index'
+import { isDev, DateFormat } from '@/utils/index';
 
-console.log('process.env.NODE_ENV', process.env.NODE_ENV)
+console.log('process.env.NODE_ENV', process.env.NODE_ENV);
 
 // 哈哈哈
 function App() {
-  const [lazyShow, setLazyShow] = useState(false)
+  const [lazyShow, setLazyShow] = useState(false);
 
   // 点击事件中动态引入css, 设置show为true d
   const onClick = () => {
     //import('./app.css');
-    setLazyShow(true)
-  }
+    setLazyShow(true);
+  };
 
   const setDark = () => {
-    initTheme('dark')
-  }
+    initTheme('dark');
+  };
 
   return (
     <>
@@ -39,6 +39,6 @@ function App() {
 
       <Footer></Footer>
     </>
-  )
+  );
 }
-export default App
+export default App;

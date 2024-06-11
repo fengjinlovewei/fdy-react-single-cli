@@ -8,4 +8,5 @@ if [[ $commit_msg =~ $msg_re ]]; then
 else
   echo "\n不合法的 commit 消息提交格式，请使用正确的格式\n"
   exec < /dev/tty && node_modules/.bin/cz --hook || true
+  exit 0
 fi

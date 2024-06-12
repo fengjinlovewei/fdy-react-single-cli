@@ -7,9 +7,7 @@ const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent')
 // 必须自己定义添加 module- 前缀，然后在 standard: [/^adm-/, /^module-/] 配置这个前缀
 // 因为这个css名称是动态生成的，所以 PurgeCSSPlugin 的treeshrking 会把这部分删除掉，
 // 所以必须添加自定义前缀过滤一下
-const myGetCSSModuleLocalIdent = (...arg) => {
-  return 'module-' + getCSSModuleLocalIdent(...arg);
-};
+const myGetCSSModuleLocalIdent = (...arg) => 'module-' + getCSSModuleLocalIdent(...arg);
 
 const isDev = process.env.NODE_ENV === 'development'; // 是否是开发模式
 const appSrc = path.resolve(__dirname, '../src');
